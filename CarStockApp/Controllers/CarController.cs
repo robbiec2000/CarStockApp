@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,12 +30,14 @@ public class CarController : ControllerBase
             
             if (!String.IsNullOrEmpty(make))
             {
-                cars = cars.FindAll(car => car.Make == make);
+                Regex regex = new Regex("^.*" + make + ".*$");
+                cars = cars.Where(car => regex.IsMatch(car.Make)).ToList();
             }
             
             if (!String.IsNullOrEmpty(model))
             {
-                cars = cars.FindAll(car => car.Model == model);
+                Regex regex = new Regex("^.*" + model + ".*$");
+                cars = cars.Where(car => regex.IsMatch(car.Model)).ToList();
             }
 
             return Ok(cars);
